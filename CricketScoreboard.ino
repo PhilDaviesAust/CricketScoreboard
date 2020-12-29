@@ -1,6 +1,8 @@
 /* 
   CricketScoreboard - display maximum 16 digits
-  website files stored in data folder 
+  using a TM1640 LED display drive control chip
+
+  website files stored in 'data' folder 
   upload the contents of the data folder with LittleFS Data Upload Tool
   ("ESP8266 LittleFS Data Upload" in Tools menu of Arduino IDE)
 
