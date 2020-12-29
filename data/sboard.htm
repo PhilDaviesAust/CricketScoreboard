@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="sboard.css">
+	<title>Scoreboard</title>
+	<script src="jquery-3.4.1.min.js"></script>
+	<script>
+	$(document).ready(function(){
+		$(".count").click(function(){			//up down count buttons
+			btn = $(this);
+			scb = btn.siblings(".inputScoreBox");
+			var direction = 1;
+			if(btn.attr("data-dir") == "dwn") direction = -1;
+			scb.val(parseInt(scb.val()) + direction);
+			if(scb.val() < 0) scb.val("0");
+		});
+		$(".inputScoreBox").blur(function() {	//validate input boxes
+			bx = $(this);
+			if(isNaN(bx.val())) bx.val("0");
+		});
+	});
+	</script>
+</head>
+<body>
+	<div class="header">
+		<h1><img src="Cricket-Ball.png" alt="Ball" style="width:90px;height:90px;"> Scoreboard</h1>
+	</div>
+	<br>
+	<table>
+		<tr>
+			<td>Score: </td><td><button class="btn count" data-dir="dwn">-</button>
+			<input type="text" class="inputScoreBox" id="score" value="0" min="0" max="999">
+			<button class="btn count" data-dir="up">+</button></td>
+		</tr>
+		<tr>
+			<td>Overs: </td><td><button class="btn count" data-dir="dwn">-</button>
+			<input type="text" class="inputScoreBox" id="overs" value="0" min="0" max="999">
+			<button class="btn count" data-dir="up">+</button></td>
+		</tr>
+		<tr>
+			<td>Wickets: </td><td><button class="btn count" data-dir="dwn">-</button>
+			<input type="text" class="inputScoreBox" id="wicket" value="0" min="0" max="10">
+			<button class="btn count" data-dir="up">+</button></td>
+		</tr>
+		<tr>
+			<td>Target: </td><td><button class="btn count" data-dir="dwn">-</button>
+			<input type="text" class="inputScoreBox" id="target" value="0" min="0" max="999">
+			<button class="btn count" data-dir="up">+</button></td>
+		</tr>
+		<tr>
+			<td> </td>
+		</tr>
+		<tr>
+			<td>Brightness:</td><td> L <input type="range" id="brightness" class="slider" min="0" max="7" value="7"> H</td>
+		</tr>
+		<tr>
+			<td> </td>
+		</tr>
+		<tr>
+			<td colspan="2"><button type="button" class="btn update" onclick="update()">Update</button></td>
+		</tr>
+	</table>
+	<script>
+		function update(){
+			var xhttp = new XMLHttpRequest();
+			var d = new Date();
+			var seconds = d.getHours()*3600 + d.getMinutes()*60 + d.getSeconds(); 
+			var pars = "score=" + $("#score").val() + "&overs=" + $("#overs").val() + "&wicket=" + $("#wicket").val();
+			pars = pars + "&target=" + $("#target").val() + "&brightness=" +$("#brightness").val();
+			pars = pars + "&seconds=" + seconds.toString();
+			xhttp.onreadystatechange = function(){
+				if (this.readyState == 4 && this.status == 200){
+					//alert(this.responseText);
+					btnupd = $(".update");
+					btnupd.animate({width: '+=100'}, "slow");
+					btnupd.animate({width: '-=100'}, "slow");
+				}
+			};
+			xhttp.open("GET", "/update?" + pars, true);
+			xhttp.send();
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+* {
+	box-sizing:				border-box;
+}
+
+body {
+	background-color: 		#80ffc0;
+	font-family: 			Arial, Helvetica, Sans-Serif;
+	Color: 					#005735;
+}
+
+.header {
+	background-color:		#ccfff0;
+	color:					#005735;
+	padding:				10px;
+}
+
+table {
+	min-width:				360px;
+}
+
+table, td, th {
+	font-size: 				1.1em;
+	padding: 				10px 5px 10px 10px;
+	border: 				0px solid black;
+}
+
+h1 {
+	font-size: 				2.4em;
+	margin: 				0;
+	padding: 				0.2em 0;
+}
+
+li {
+	padding:				0.5em;
+}
+
+.inputScoreBox {
+	max-width:				65px;
+	font-size: 				1.8em;
+	text-align:				center;
+	color:					#005735;
+	background-color:		#ccfff0;
+}
+
+.btn {
+    border: 				none; 			/* Remove borders */
+    font-size: 				1.5em; 			/* Add a text color */
+	text-align:				center;
+    padding: 				8px 28px; 		/* Add some padding */
+    cursor: 				pointer; 		/* Add a pointer cursor on mouse-over */
+	box-shadow:				0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	color: 					#ccfff0; 		/* light blue */
+	background-color: 		#005735;
+}
+
+.update {
+	margin:					auto;
+	margin-left:			25%;
+	width:					50%;	
+}	
+	
+.btn:hover {
+	background: 			#ccfff0;
+	color:					#005735;
+}
+
+.btn:active {
+	box-shadow: 			0 5px #666;
+	transform: 				translate(4px, 4px);
+}
+
+/* The slider itself */
+.slider {
+    -webkit-appearance: 	none;  			/* Override default CSS styles */
+    appearance: 			none;
+    width: 					80%; 			/* Full-width */
+    height: 				15px; 			/* Specified height */
+    background: 			#ccfff0;
+    outline: 				none; 			/* Remove outline */
+    opacity:				0.8; 			/* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: 	.2s; 			/* 0.2 seconds transition on hover */
+    transition: 			opacity .2s;	
+	box-shadow:				0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 				1; 				/* Fully shown on mouse-over */
+}
+/* The slider handle (use webkit (Chrome, Opera, Safari, Edge) and moz (Firefox) to override default look) */ 
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: 	none; 			/* Override default look */
+    appearance: 			none;
+    width: 					25px; 			/* Set a specific slider handle width */
+    height: 				25px; 			/* Slider handle height */
+	border-radius: 			50%;
+    background: 			#005735;
+    cursor: 				pointer; 		/* Cursor on hover */
+}
+
