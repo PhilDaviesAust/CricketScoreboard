@@ -1,4 +1,5 @@
-// assign network name (ssid) and password (password must be min 8 characters)
+// assign network name (ssid) and password
+// (password must be min 8 characters)
 const char* ssid     = "scoreboardnet";
 const char* password = "scoreboard";
 

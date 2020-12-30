@@ -17,29 +17,29 @@
 #include <WEMOS_TM1640.h>
 #include "credentials.h"
 
-  //-------------------------------------------------------------
-  // DHT12 temperature sensor - SCL and SDA use default pins D1(GPIO5) and D2(GPIO4) respectively 
-  // TM1640 display           - CLK and DIN use default pins D5(GPIO14) and D7(GPIO13) respectively
+//-------------------------------------------------------------
+// DHT12 temperature sensor - SCL and SDA use default pins D1(GPIO5) and D2(GPIO4) respectively 
+// TM1640 display           - CLK and DIN use default pins D5(GPIO14) and D7(GPIO13) respectively
 
 String            score            = "0";
 String            overs            = "0";
 String            wicket           = "0";
 String            target           = "0";
 String            seconds          = "00";     // time in seconds sourced from http request
-unsigned long     millipede        = 0;        // time stamp in millis
-int               schedCount       = 0;        // scheduler counter
-int               schedInterval    = 1;        // scheduler time interval
-  //-------------------------------------------------------------
+uint32_t          millipede        = 0;        // time stamp in millis
+uint8_t           schedCount       = 0;        // scheduler counter
+uint8_t           schedInterval    = 1;        // scheduler time interval
+//-------------------------------------------------------------
 ESP8266WebServer  webServer(80);
 Ticker            timebomb;
 DHT12             dht12;
 TM1640            tm(4);                       // (intensity=4, dataPin=D7, clockPin=D5)
 
-  // character position assignment
-  // [0-2] runs  [3-5] target score  [6-7] over  [9-10] wicket  [11-15] time/temp (HHMM:)
-////////////////////////////////////////////////////////////////
-//format bytes
+// character position assignment
+// [0-2] runs  [3-5] target score  [6-7] over  [9-10] wicket  [11-15] time/temp (HHMM:)
+/////////////////////////////////////////////////////////////////
 String formatBytes(size_t bytes){
+  //format bytes - human readable format
   if (bytes < 1024){
     return String(bytes)+"B";
   } else if(bytes < (1024 * 1024)){
@@ -50,7 +50,7 @@ String formatBytes(size_t bytes){
     return String(bytes/1024.0/1024.0/1024.0)+"GB";
   }
 } // end of formatBytes
-////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 String getContentType(String filename){
   if(webServer.hasArg("download")) return "application/octet-stream";
   else if(filename.endsWith(".htm")) return "text/html";
@@ -70,12 +70,11 @@ String getContentType(String filename){
 /////////////////////////////////////////////////////////////////
 bool displayTemperature(){
   // Display temperature - characters 11-15
-  int ret = dht12.get();
+  if (dht12.get()!=0) return false;
   uint8_t temp = dht12.cTemp;
+
   //Serial.printf("temperature: %i\n", temp);
-  
-  if(temp == 0) return false;                     // didn't get a reading
-  
+   
   uint8_t t = temp/10;                            //tens
   uint8_t u = temp%10;                            //units
   
@@ -95,7 +94,6 @@ void displayTime(){
   // Display time - characters 11-15
   if (millipede == 0) return;                     //haven't had a http request yet
   uint8_t pulse;
-  
   uint32_t secNow = seconds.toInt() + ((millis() - millipede)/1000);
   uint8_t minutesNow = ((secNow)/60)% 60; 
   uint8_t hoursNow = ((secNow)/3600)% 24;
@@ -122,14 +120,15 @@ void displayTime(){
 /////////////////////////////////////////////////////////////////
 void displayScore(bool clearDisp=true){ 
   // Display score - characters 0-2 
+
   //Serial.printf("score: %i\n", score.toInt());
+
   //score
   uint8_t h = score.toInt()/100%10;     //hundreds
   uint8_t t = score.toInt()/10%10;      //tens
   uint8_t u = score.toInt()%10;         //units
   if(h == 0) h=14;                      //suppress leading zeros
-  if(h == 14 & t == 0) t=14;
-  //if(h == 14 & t == 14 & u == 0) u=14;
+  if(h == 14 && t == 0) t=14;
   
   tm.writeCharToBuffer(0, h);
   tm.writeCharToBuffer(1, t);
@@ -140,7 +139,7 @@ void displayScore(bool clearDisp=true){
   t = target.toInt()/10%10;             //tens
   u = target.toInt()%10;                //units
   if(h == 0) h=14;                      //suppress leading zeros
-  if(h == 14 & t == 0) t=14;
+  if(h == 14 && t == 0) t=14;
   
   tm.writeCharToBuffer(3, h);
   tm.writeCharToBuffer(4, t);
@@ -153,7 +152,7 @@ void displayScore(bool clearDisp=true){
   t = overs.toInt()/10%10;              //tens
   u = overs.toInt()%10;                 //units
   if(h == 0) h=14;                      //suppress leading zeros
-  if(h == 14 & t == 0) t=14;
+  if(h == 14 && t == 0) t=14;
   
   tm.writeCharToBuffer(6, t);
   tm.writeCharToBuffer(7, u);
@@ -167,7 +166,7 @@ void displayScore(bool clearDisp=true){
   tm.writeCharToBuffer(9, t);
   tm.writeCharToBuffer(10, u);
 
-  for (int i=0; i<16; i++){Serial.printf("display score disBuffer[%i] %i\n", i, tm.disBuffer[i]);}
+  //for (uint8_t i=0; i<16; i++){Serial.printf("display score disBuffer[%i] %i\n", i, tm.disBuffer[i]);}
   
   tm.display();
 
@@ -226,8 +225,8 @@ void schedule() {
 /////////////////////////////////////////////////////////////////
 void setup() {
   Serial.begin(115200);
-  Serial.print("\n");
   Serial.setDebugOutput(false);
+  Serial.printf("\n");
   //-------------------------------------------------------------
   // start LittleFS file system
   LittleFS.begin();
