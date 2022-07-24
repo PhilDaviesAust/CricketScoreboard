@@ -1,5 +1,6 @@
 # CricketScoreboard
 ESP8266 Arduino code for cricket scoreboard project.
+Based on ESP8266 TM1640 hardware.
 
 Hardware project is available at https://easyeda.com/PhilD/wemos-d1-mini-tm1640-v3
 
